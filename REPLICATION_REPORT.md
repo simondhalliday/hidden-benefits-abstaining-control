@@ -20,6 +20,9 @@ This is an initial public draft of the replication package. The Stata code has b
   analysis data from raw zTree exports and derives the main Stata analysis
   variables. The current rebuild passes all committed raw-to-clean and
   derived-variable audit checks.
+- Added `code/python/audit_demographics.py` and `DEMOGRAPHICS_AUDIT.md`, which
+  audit Appendix A1 questionnaire demographics and screen free-text fields
+  without exporting raw questionnaire rows.
 
 ## What remains
 
@@ -31,10 +34,15 @@ This is an initial public draft of the replication package. The Stata code has b
 - Compare the R supplement against Stata once Stata is available, especially
   bootstrap conventions, `mfx compute` standard errors, and publication table
   formatting.
-- Finish the questionnaire/demographic provenance audit for Appendix Table A1.
+- Resolve the remaining Appendix A1 provenance notes: C10 demographic cells are
+  close but not exact, and TP10 has eight zTree run IDs versus seven sessions in
+  the paper.
 
 ## Known caveats
 
 - Stata is not available in the current shell environment, so the reproduction was not run here.
 - Additional legacy scripts in the private source archive contain old absolute paths and exploratory commands, so they are documented in the manifest but omitted from this public draft.
 - Raw zTree session files are not included pending privacy review.
+- Raw questionnaire rows, free-text responses, majors, birthdates, and row-level
+  demographics are not included. The current free-text screen found no obvious
+  direct-identifier patterns, but contextual disclosure risk remains.

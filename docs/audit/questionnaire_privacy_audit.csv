@@ -1,0 +1,10 @@
+relative_path,rows,free_text_nonmissing,free_text_max_chars,email_pattern_hits,phone_pattern_hits,url_pattern_hits,long_number_pattern_hits,gender_nonmissing,age_nonmissing,birthdate_nonmissing,major_nonmissing,unique_majors,privacy_recommendation
+data-autonomy/2014.04.25 - T1/question_140425_1519.xlsx,15,9,186,0,0,0,0,0,0,0,0,0,do not release raw free text or row-level demographics publicly
+data-autonomy/2014.04.25 - T2/questionnaire.xlsx,21,7,242,0,0,0,0,21,21,20,20,18,do not release raw free text or row-level demographics publicly
+data-autonomy/2014.04.29 - C2/questionnaire_140429_0920.xlsx,20,12,221,0,0,0,0,20,20,20,20,18,do not release raw free text or row-level demographics publicly
+data-autonomy/2014.04.29 - C3/questionnaire_140429_1147.xlsx,18,0,0,0,0,0,0,0,0,0,0,0,do not release raw free text or row-level demographics publicly
+data-autonomy/2014.05.01 - C4/questionnaire_. . . . . . ..xlsx,14,0,0,0,0,0,0,0,0,0,0,0,do not release raw free text or row-level demographics publicly
+data-autonomy/2014.05.01 - T3/questionnaire_140501_1052.xlsx,18,6,194,0,0,0,0,18,18,18,18,14,do not release raw free text or row-level demographics publicly
+data-autonomy/2014.05.01 - T4/questionnaire_140501_1213.xlsx,18,6,93,0,0,0,0,18,18,18,18,16,do not release raw free text or row-level demographics publicly
+data-autonomy/Consolidated/Workbook3.xlsx,46,24,389,0,0,0,0,44,46,44,44,37,do not release raw free text or row-level demographics publicly
+data-autonomy/Consolidated/questionnaires_treatment.xlsx,104,34,550,0,0,0,0,104,104,101,101,62,do not release raw free text or row-level demographics publicly

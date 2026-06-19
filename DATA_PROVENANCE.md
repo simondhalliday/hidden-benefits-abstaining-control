@@ -88,14 +88,40 @@ Current status:
   summing `Q1b`, `Q2c`, `Q3a`, `Q4b`, `Q5c`, `Q6c`, `Q7a`, `Q8a`, `Q9c`, `Q10c`,
   `Q11a`, and `Q12b`.
 
-The separate questionnaire spreadsheets are audited only in aggregate. The
-script does not export raw free-text responses. Those files can help with
-Appendix Table A1 demographics, but they are less cleanly structured than the
-zTree exports and still need manual review before the demographic cells are
-marked fully verified.
+## Questionnaire demographics and free text
+
+Use `code/python/audit_demographics.py` to audit the consolidated questionnaire
+demographics and screen open-ended responses without exporting raw questionnaire
+rows:
+
+```bash
+python code/python/audit_demographics.py --source /path/to/Autonomy_Control
+```
+
+The script writes aggregate outputs to `docs/audit/`:
+
+- `appendix_a1_demographics_audit.csv`
+- `questionnaire_privacy_audit.csv`
+
+Current status:
+
+- Appendix Table A1 demographics appear to come from questionnaire respondents,
+  not all zTree subjects.
+- TP10 gender and age cells match the paper after rounding.
+- C10 age SD matches after rounding. C10 female share is 19/44 = 43.18% versus
+  the paper's 44%, and C10 mean age is 21.0455 versus the paper's 21.02. These
+  are close but not exact, so the C10 demographic cells remain a table-note
+  audit item.
+- The free-text screen found no email, phone, URL, or long-number patterns, but
+  raw open-ended responses, row-level majors, birthdates, and row-level
+  demographics should remain out of public GitHub.
+
+See `DEMOGRAPHICS_AUDIT.md` for the release recommendation and remaining checks.
 
 ## Open questions before Zenodo
 
 - Confirm with Gabriel Burdin and Fabio Landini that the consolidated data can be released under CC-BY 4.0.
 - Confirm whether the raw zTree outputs should be archived privately, deposited with restricted access, or excluded from the public replication package.
 - Confirm whether comparison data from Falk-Kosfeld, Ploner-Schmelz-Ziegelmeyer, and Schnedler-Vadovic are redistributable or should be replaced by access instructions.
+- Confirm whether questionnaire workbooks should be excluded entirely from
+  Zenodo or included only in a restricted/private archive.

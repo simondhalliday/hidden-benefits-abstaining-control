@@ -70,6 +70,16 @@ python code/python/rebuild_clean_data.py --source /path/to/Autonomy_Control
 This writes row-level rebuilt files to ignored `tmp/` outputs and aggregate audit
 reports to `docs/audit/`.
 
+Questionnaire demographics and free-text privacy risk can be audited in
+aggregate with:
+
+```bash
+python code/python/audit_demographics.py --source /path/to/Autonomy_Control
+```
+
+This writes aggregate audit reports only. It does not export raw free-text
+responses, majors, birthdates, or row-level demographics.
+
 ## Data included
 
 The draft includes consolidated analysis data only:
@@ -78,7 +88,9 @@ The draft includes consolidated analysis data only:
 - `data/processed/merged_treatment_control.dta`
 - `data/processed/merged_kf_ziegel.csv`
 
-The raw zTree session files remain excluded pending privacy and coauthor review. See `DATA_PROVENANCE.md` and `docs/audit/source_manifest.csv`.
+The raw zTree session files and row-level questionnaire files remain excluded
+pending privacy and coauthor review. See `DATA_PROVENANCE.md`,
+`DEMOGRAPHICS_AUDIT.md`, and `docs/audit/source_manifest.csv`.
 
 ## Citation
 

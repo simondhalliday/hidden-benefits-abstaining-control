@@ -22,6 +22,9 @@ Published article:
 - The cleaned zTree analysis data can now be rebuilt from the raw zTree exports
   with `code/python/rebuild_clean_data.py`; the rebuild matches the committed
   cleaned CSV and derived Stata variables within floating-point tolerance.
+- Questionnaire demographics have been audited in aggregate with
+  `code/python/audit_demographics.py`. TP10 matches Appendix Table A1 after
+  rounding; C10 is close but not exact for female share and mean age.
 - The Stata script appears to generate the two published cumulative distribution
   figures and the regression outputs underlying Table 4, but exact execution and
   output comparison remain pending.
@@ -37,7 +40,7 @@ Published article:
 | Text Result 6 | Control-choice proportions: 63.15% in C10 and 77.34% in TP10, Fisher exact p = 0.163 | `code/stata/master_do_file.do`, Result 6 block; `data/processed/merged_treatment_control.dta`; `code/r/replicate_descriptives.Rmd` | Proportions, Fisher exact test, Mann-Whitney test, and R bootstrap CI added; Stata still pending |
 | Table 3 | GCOS agent-scale means and tests by treatment | `code/stata/master_do_file.do`, GCOS block; `data/processed/merged_treatment_control.dta`; `code/r/replicate_descriptives.Rmd` | Means and R test statistics added; Stata still pending |
 | Table 4 | OLS/logit marginal-effect regressions with treatment and standardized GCOS scales | `code/stata/master_do_file.do`, GCOS regression block; `code/r/replicate_descriptives.Rmd` | R point estimates added and match published convention closely; Stata standard errors/stars still pending |
-| Appendix Table A1 | Session counts, subject counts, gender, age, and earnings by treatment | `data/processed/merged_treatment_control.dta`; `code/python/audit_raw_sessions.py`; `code/python/rebuild_clean_data.py`; source questionnaire/payment variables need review | Subject and earnings cells mostly verified; crash export excluded; questionnaire demographics partially audited; TP10 has eight zTree run IDs but paper reports seven sessions |
+| Appendix Table A1 | Session counts, subject counts, gender, age, and earnings by treatment | `data/processed/merged_treatment_control.dta`; `code/python/audit_raw_sessions.py`; `code/python/rebuild_clean_data.py`; `code/python/audit_demographics.py` | Subject and earnings cells mostly verified; crash export excluded; TP10 demographics match after rounding; C10 demographics are close but not exact; TP10 has eight zTree run IDs but paper reports seven sessions |
 
 ## Verified Descriptive Checks
 
@@ -187,10 +190,10 @@ against the committed Stata data within tolerance.
 - The original master script mixes direct exported artifacts with statistics
   printed to the log. Publication-ready reproduction may require adding explicit
   table-export code for Tables 1 and 2.
-- Appendix Table A1 needs a fuller audit of gender, age, and payment variables
-  against the original questionnaire/payment files before publication. The raw
-  zTree audit suggests the TP10 session-count discrepancy is likely a difference
-  between zTree run identifiers and the session definition used in the paper.
+- Appendix Table A1 still has two small provenance questions: C10 questionnaire
+  demographics are close but not exact, and the raw zTree audit suggests the
+  TP10 session-count discrepancy is likely a difference between zTree run
+  identifiers and the session definition used in the paper.
 - Any public Zenodo deposit should wait for coauthor approval, especially for raw
   zTree files and any material containing payment, demographic, or session-level
   records.
