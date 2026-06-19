@@ -1,0 +1,18 @@
+.DS_Store
+*.log
+*.tmp
+*.bak
+*.smcl
+
+# Keep generated output folders but ignore generated contents.
+results/figures/*
+results/logs/*
+results/tables/*
+!results/figures/.gitkeep
+!results/logs/.gitkeep
+!results/tables/.gitkeep
+
+# Do not commit raw legacy archive dumps.
+raw/
+archive/
+tmp/
