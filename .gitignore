@@ -4,6 +4,8 @@
 *.bak
 *.smcl
 code/r/*.html
+ANALYSIS_AUDIT.html
+REPLICATION_REPORT.html
 
 # Keep generated output folders but ignore generated contents.
 results/figures/*

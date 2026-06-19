@@ -34,7 +34,7 @@ Published article:
 | Text Result 6 | Control-choice proportions: 63.15% in C10 and 77.34% in TP10, Fisher exact p = 0.163 | `code/stata/master_do_file.do`, Result 6 block; `data/processed/merged_treatment_control.dta`; `code/r/replicate_descriptives.Rmd` | Proportions, Fisher exact test, Mann-Whitney test, and R bootstrap CI added; Stata still pending |
 | Table 3 | GCOS agent-scale means and tests by treatment | `code/stata/master_do_file.do`, GCOS block; `data/processed/merged_treatment_control.dta`; `code/r/replicate_descriptives.Rmd` | Means and R test statistics added; Stata still pending |
 | Table 4 | OLS/logit marginal-effect regressions with treatment and standardized GCOS scales | `code/stata/master_do_file.do`, GCOS regression block; `code/r/replicate_descriptives.Rmd` | R point estimates added and match published convention closely; Stata standard errors/stars still pending |
-| Appendix Table A1 | Session counts, subject counts, gender, age, and earnings by treatment | `data/processed/merged_treatment_control.dta`; source questionnaire/payment variables need review | Some sample counts verified; full table requires variable audit |
+| Appendix Table A1 | Session counts, subject counts, gender, age, and earnings by treatment | `data/processed/merged_treatment_control.dta`; `code/python/audit_raw_sessions.py`; source questionnaire/payment variables need review | Subject and earnings cells mostly verified; crash export excluded; TP10 has eight zTree run IDs but paper reports seven sessions |
 
 ## Verified Descriptive Checks
 
@@ -169,7 +169,9 @@ needs to be checked carefully.
   printed to the log. Publication-ready reproduction may require adding explicit
   table-export code for Tables 1 and 2.
 - Appendix Table A1 needs a fuller audit of gender, age, and payment variables
-  against the original questionnaire/payment files before publication.
+  against the original questionnaire/payment files before publication. The raw
+  zTree audit suggests the TP10 session-count discrepancy is likely a difference
+  between zTree run identifiers and the session definition used in the paper.
 - Any public Zenodo deposit should wait for coauthor approval, especially for raw
   zTree files and any material containing payment, demographic, or session-level
   records.

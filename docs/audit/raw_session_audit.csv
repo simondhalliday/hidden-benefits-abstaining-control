@@ -1,0 +1,14 @@
+relative_path,session_id,treatment_hint,usable_hint,subject_rows,unique_subjects,unique_groups,role_1_count,role_2_count,role_3_count,cleaned_treatment,cleaned_rows,appears_in_cleaned_data,raw_rows_match_cleaned_rows
+data-autonomy/2014.04.25 - C1 - CRASH - Unusable/140425_1350.xls,140425_1350,crash/unusable,exclude,20,20,10,10,10,0,,0,False,False
+data-autonomy/2014.04.25 - T1/140425_1519.xls,140425_1519,TP10,candidate,15,15,5,5,5,5,2,15,True,True
+data-autonomy/2014.04.25 - T2/140425_1709.xls,140425_1709,TP10,candidate,21,21,7,7,7,7,2,21,True,True
+data-autonomy/2014.04.29 - C2/140429_0920.xls,140429_0920,C10,candidate,20,20,10,10,10,0,1,20,True,True
+data-autonomy/2014.04.29 - C3/140429_1147.xls,140429_1147,C10,candidate,18,18,9,9,9,0,1,18,True,True
+data-autonomy/2014.05.01 - C4/140501_0927.xls,140501_0927,C10,candidate,14,14,7,7,7,0,1,14,True,True
+data-autonomy/2014.05.01 - T3/140501_1052.xls,140501_1052,TP10,candidate,18,18,6,6,6,6,2,18,True,True
+data-autonomy/2014.05.01 - T4/140501_1213.xls,140501_1213,TP10,candidate,18,18,6,6,6,6,2,18,True,True
+data-autonomy/2015_autonomy_control_experiments/Control - 2015.04.01 - C1/150401_1409.xls,150401_1409,C10,candidate,24,24,12,12,12,0,1,24,True,True
+data-autonomy/2015_autonomy_control_experiments/Treatment - 2015.04.01 - Treatment/150401_1456.xls,150401_1456,TP10,candidate,24,24,8,8,8,8,2,24,True,True
+data-autonomy/2015_autonomy_control_experiments/Treatment - 2015.04.06 - 1100/150406_1046.xls,150406_1046,TP10,candidate,21,21,7,7,7,7,2,21,True,True
+data-autonomy/2015_autonomy_control_experiments/Treatment - 2015.04.13 - 1000/150413_1027.xls,150413_1027,TP10,candidate,21,21,7,7,7,7,2,21,True,True
+data-autonomy/2015_autonomy_control_experiments/Treatment - 2015.04.13 - 1200/150413_1152.xls,150413_1152,TP10,candidate,21,21,7,7,7,7,2,21,True,True

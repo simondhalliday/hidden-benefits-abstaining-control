@@ -33,6 +33,30 @@ The following categories are excluded from this public draft:
 - Literature PDFs and bibliography scraps.
 - Old paper drafts and referee-response files.
 
+## Raw-session audit
+
+The legacy archive contains raw zTree `.xls` exports under
+`Autonomy_Control/data-autonomy/`. These files are tab-delimited zTree exports,
+not binary Excel workbooks. The folder
+`data-autonomy/2014.04.25 - C1 - CRASH - Unusable/` appears to be the crashed
+control session Simon remembered and is excluded from the cleaned analysis data.
+
+Use `code/python/audit_raw_sessions.py` to compare a local extraction of the raw
+zTree exports against `data/processed/merged_control_treatment.csv` without
+copying raw data into the public repository:
+
+```bash
+python code/python/audit_raw_sessions.py --source /path/to/Autonomy_Control
+```
+
+The current audit indicates that all non-crash candidate exports appear in the
+cleaned data and that the crash/unusable export does not. The cleaned TP10 data
+contain eight zTree run identifiers totaling 159 subjects. The paper reports
+seven TP10 sessions, so the remaining provenance question is probably
+definitional rather than a missing-data issue: two zTree runs may have been
+counted as one session in the paper. This should be confirmed against lab
+records or coauthor memory before marking Appendix Table A1 fully verified.
+
 ## Open questions before Zenodo
 
 - Confirm with Gabriel Burdin and Fabio Landini that the consolidated data can be released under CC-BY 4.0.
