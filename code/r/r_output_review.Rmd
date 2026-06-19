@@ -1,0 +1,58 @@
+---
+title: "R Output Review"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+---
+
+```{r setup}
+input_dir <- dirname(knitr::current_input(dir = TRUE))
+repo_root <- normalizePath(file.path(input_dir, "..", ".."))
+knitr::opts_knit$set(root.dir = repo_root)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+
+library(knitr)
+```
+
+This file collects the CSV outputs written by
+`code/r/replicate_descriptives.Rmd` into one human-readable HTML review page.
+
+```{r helpers}
+table_dir <- file.path(repo_root, "results", "tables", "r")
+
+table_titles <- c(
+  "replication_status.csv" = "Replication Status",
+  "sample_sizes.csv" = "Sample Sizes",
+  "published_target_checks.csv" = "Published Target Checks",
+  "table1_descriptives.csv" = "Table 1 Descriptive Statistics",
+  "table1_differences.csv" = "Table 1 Mean Differences",
+  "table1_bootstrap_ci.csv" = "Table 1 Bootstrap Confidence Intervals",
+  "nonparametric_tests.csv" = "Nonparametric Tests",
+  "table2_response_categories.csv" = "Table 2 Response Categories",
+  "table2_fisher_tests.csv" = "Table 2 Fisher Tests",
+  "table3_gcos_means.csv" = "Table 3 GCOS Means",
+  "table3_gcos_tests.csv" = "Table 3 GCOS Tests",
+  "table4_regression_check.csv" = "Table 4 Regression Check",
+  "result6_control_choice_proportions.csv" = "Result 6 Control Choice Proportions",
+  "result6_tests.csv" = "Result 6 Tests",
+  "result6_bootstrap_ci.csv" = "Result 6 Bootstrap Confidence Interval",
+  "appendix_a1_partial_checks.csv" = "Appendix A1 Partial Checks",
+  "appendix_a1_demographics_audit.csv" = "Appendix A1 Demographics Audit"
+)
+
+csv_files <- file.path(table_dir, names(table_titles))
+missing_files <- csv_files[!file.exists(csv_files)]
+if (length(missing_files) > 0) {
+  stop("Missing expected CSV outputs: ", paste(basename(missing_files), collapse = ", "))
+}
+```
+
+```{r tables, results='asis'}
+for (file in csv_files) {
+  title <- table_titles[[basename(file)]]
+  data <- read.csv(file, check.names = FALSE, stringsAsFactors = FALSE)
+  cat("\n\n## ", title, "\n\n", sep = "")
+  print(kable(data))
+}
+```

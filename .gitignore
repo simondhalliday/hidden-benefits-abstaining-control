@@ -4,6 +4,7 @@
 *.bak
 *.smcl
 code/r/*.html
+code/r/*_files/
 ANALYSIS_AUDIT.html
 REPLICATION_REPORT.html
 

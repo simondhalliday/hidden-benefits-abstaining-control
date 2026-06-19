@@ -17,6 +17,17 @@ outputs to:
 - `results/tables/r/`
 - `results/figures/r/`
 
+To view all generated CSV tables on one page, run:
+
+```bash
+Rscript -e 'rmarkdown::render("code/r/r_output_review.Rmd", output_file = "../../results/r_output_review.html", quiet = TRUE)'
+```
+
+This writes `results/r_output_review.html`.
+
+The review page is tracked in GitHub so you can open it directly from a local
+clone without rendering each CSV by hand.
+
 The R supplement currently checks:
 
 - Figures 1 and 2 CDFs.

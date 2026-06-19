@@ -63,6 +63,8 @@ or final publication table formatting.
 
 See `VERIFY.md` for the current R-only and Stata verification workflows. The R
 render writes review outputs to `results/tables/r/` and `results/figures/r/`.
+For a single human-readable page of the CSV outputs, render
+`code/r/r_output_review.Rmd`.
 
 The cleaned zTree analysis data can be rebuilt from the private source archive
 extraction with:
@@ -94,7 +96,8 @@ The draft includes consolidated analysis data only:
 
 The raw zTree session files and row-level questionnaire files remain excluded
 pending privacy and coauthor review. See `DATA_PROVENANCE.md`,
-`DEMOGRAPHICS_AUDIT.md`, and `docs/audit/source_manifest.csv`.
+`DEMOGRAPHICS_AUDIT.md`, `docs/audit/COMPARISON_DATA_PROVENANCE.md`, and
+`docs/audit/source_manifest.csv`.
 
 `COAUTHOR_REVIEW_PACKET.md` summarizes the proposed public data scope, remaining
 provenance notes, and release decisions for Gabriel Burdin and Fabio Landini.

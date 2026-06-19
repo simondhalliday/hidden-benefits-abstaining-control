@@ -33,6 +33,28 @@ The following categories are excluded from this public draft:
 - Literature PDFs and bibliography scraps.
 - Old paper drafts and referee-response files.
 
+## Public experimental materials
+
+Final zTree program/questionnaire/payoff files are included under
+`instruments/ztree/` and are intended to remain public as part of the
+replication package. The excluded zTree category above refers to zTree
+executables and raw session outputs, not the public experiment program files.
+
+## Comparison data
+
+`data/processed/merged_kf_ziegel.csv` includes BHL rows and comparison rows from
+Falk-Kosfeld and Ziegelmeyer-Schmelz-Ploner. Those comparison sources have
+public provenance:
+
+- Falk-Kosfeld data are available through openICPSR:
+  https://doi.org/10.3886/E116246V1
+- Ziegelmeyer-Schmelz-Ploner data are available as Springer electronic
+  supplementary material for https://doi.org/10.1007/s10683-011-9302-8
+
+The pooled file also contains Schnedler-Vadovic rows, but the final Stata
+comparison block drops them before the reported regressions because permission
+had not been obtained. See `docs/audit/COMPARISON_DATA_PROVENANCE.md`.
+
 ## Raw-session audit
 
 The legacy archive contains raw zTree `.xls` exports under
@@ -122,7 +144,9 @@ See `DEMOGRAPHICS_AUDIT.md` for the release recommendation and remaining checks.
 
 - Confirm with Gabriel Burdin and Fabio Landini that the consolidated data can be released under CC-BY 4.0.
 - Confirm whether the raw zTree outputs should be archived privately, deposited with restricted access, or excluded from the public replication package.
-- Confirm whether comparison data from Falk-Kosfeld, Ploner-Schmelz-Ziegelmeyer, and Schnedler-Vadovic are redistributable or should be replaced by access instructions.
+- Decide whether to remove Schnedler-Vadovic rows from a future public
+  comparison-data file, since they are not used in the final comparison
+  regressions and public redistribution has not been verified.
 - Confirm whether questionnaire workbooks should be excluded entirely from
   Zenodo or included only in a restricted/private archive.
 - See `COAUTHOR_REVIEW_PACKET.md` for the compact review questions to send to
