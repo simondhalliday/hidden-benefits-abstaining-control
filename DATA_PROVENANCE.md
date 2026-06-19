@@ -52,10 +52,10 @@ python code/python/audit_raw_sessions.py --source /path/to/Autonomy_Control
 The current audit indicates that all non-crash candidate exports appear in the
 cleaned data and that the crash/unusable export does not. The cleaned TP10 data
 contain eight zTree run identifiers totaling 159 subjects. The paper reports
-seven TP10 sessions, so the remaining provenance question is probably
-definitional rather than a missing-data issue: two zTree runs may have been
-counted as one session in the paper. This should be confirmed against lab
-records or coauthor memory before marking Appendix Table A1 fully verified.
+seven TP10 sessions. Because the subject counts and raw-session coverage match,
+this is probably a session-definition convention or article typo rather than a
+substantive missing-data issue. This can be checked against lab records or
+coauthor memory, but it should not block the core replication audit.
 
 ## Raw-to-clean rebuild
 
@@ -125,3 +125,5 @@ See `DEMOGRAPHICS_AUDIT.md` for the release recommendation and remaining checks.
 - Confirm whether comparison data from Falk-Kosfeld, Ploner-Schmelz-Ziegelmeyer, and Schnedler-Vadovic are redistributable or should be replaced by access instructions.
 - Confirm whether questionnaire workbooks should be excluded entirely from
   Zenodo or included only in a restricted/private archive.
+- See `COAUTHOR_REVIEW_PACKET.md` for the compact review questions to send to
+  coauthors.

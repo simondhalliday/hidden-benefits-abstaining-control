@@ -23,6 +23,10 @@ This is an initial public draft of the replication package. The Stata code has b
 - Added `code/python/audit_demographics.py` and `DEMOGRAPHICS_AUDIT.md`, which
   audit Appendix A1 questionnaire demographics and screen free-text fields
   without exporting raw questionnaire rows.
+- Expanded `code/r/replicate_descriptives.Rmd` with a third-party status table,
+  published-target checks, and Appendix A1 demographic audit output.
+- Added `COAUTHOR_REVIEW_PACKET.md` to summarize the public data scope and
+  coauthor approval questions.
 
 ## What remains
 
@@ -36,7 +40,8 @@ This is an initial public draft of the replication package. The Stata code has b
   formatting.
 - Resolve the remaining Appendix A1 provenance notes: C10 demographic cells are
   close but not exact, and TP10 has eight zTree run IDs versus seven sessions in
-  the paper.
+  the paper. The TP10 count does not appear to affect subject counts or main
+  results and may be a session-definition convention or article typo.
 
 ## Known caveats
 

@@ -32,6 +32,22 @@ CDF figures, and an R version of the Table 4 regression/marginal-effect
 estimates. Stata-specific details such as exact bootstrap conventions and
 `mfx` standard errors should still be compared against a Stata run.
 
+## Replication Status
+
+```{r replication-status}
+tibble::tribble(
+  ~item, ~current_r_status, ~stata_status, ~note,
+  "Figures 1 and 2", "R renders CDFs from included data", "Pending", "Visual comparison to article still needed",
+  "Table 1", "Means, SDs, quartiles, and mean differences match", "Pending", "R bootstrap is an independent check, not exact Stata RNG parity",
+  "Table 2", "Shares and control-transfer means match after label-orientation check", "Pending", "Published labels are response to control abstinence",
+  "Table 3", "GCOS means match", "Pending", "R t-tests and Mann-Whitney checks included",
+  "Table 4", "Point-estimate convention reproduced closely", "Pending", "Stata `mfx compute` standard errors and stars still need canonical check",
+  "Result 6", "Control-choice proportions and tests computed", "Pending", "Published percentages match up to rounding convention",
+  "Appendix A1", "Subject/earnings cells and questionnaire demographics partly checked", "Pending", "C10 demographics close but not exact; TP10 session count may be typo or convention"
+) %>%
+  kable()
+```
+
 ```{r helpers}
 fmt_num <- function(x, digits = 2) {
   ifelse(is.na(x), NA_character_, formatC(x, format = "f", digits = digits))
@@ -94,6 +110,14 @@ tidy_htest <- function(test, label) {
     p_value = test$p.value
   )
 }
+
+match_note <- function(observed, target, digits = 2) {
+  ifelse(
+    round(observed, digits) == target,
+    "matches after rounding",
+    paste0("differs: observed ", fmt_num(observed, digits), ", target ", fmt_num(target, digits))
+  )
+}
 ```
 
 ```{r load-data}
@@ -124,6 +148,18 @@ agents <- df %>%
       levels = c("Negative", "Neutral", "Positive")
     )
   )
+
+appendix_demographics_path <- file.path(
+  "docs",
+  "audit",
+  "appendix_a1_demographics_audit.csv"
+)
+
+appendix_demographics <- if (file.exists(appendix_demographics_path)) {
+  read.csv(appendix_demographics_path, stringsAsFactors = FALSE)
+} else {
+  NULL
+}
 ```
 
 ## Sample Sizes
@@ -131,6 +167,54 @@ agents <- df %>%
 ```{r sample-sizes}
 agents %>%
   count(treatment_label, name = "agents") %>%
+  kable()
+```
+
+```{r published-target-checks}
+target_checks <- bind_rows(
+  agents %>%
+    group_by(treatment_label) %>%
+    summarize(
+      observed = n(),
+      .groups = "drop"
+    ) %>%
+    mutate(
+      check = paste0("Agent sample size: ", treatment_label),
+      target = c(C10 = 38, TP10 = 53)[treatment_label],
+      status = ifelse(observed == target, "matches", "differs")
+    ) %>%
+    select(check, observed, target, status),
+  agents %>%
+    group_by(treatment_label) %>%
+    summarize(
+      observed = mean(diff_no_control_control, na.rm = TRUE),
+      .groups = "drop"
+    ) %>%
+    mutate(
+      check = paste0("Table 1 mean xNC - xC: ", treatment_label),
+      target = c(C10 = 3.76, TP10 = -5.13)[treatment_label],
+      status = match_note(observed, target)
+    ) %>%
+    select(check, observed, target, status),
+  agents %>%
+    group_by(treatment_label) %>%
+    summarize(
+      observed = mean(autonomy, na.rm = TRUE),
+      .groups = "drop"
+    ) %>%
+    mutate(
+      check = paste0("Table 3 autonomy mean: ", treatment_label),
+      target = c(C10 = 73.53, TP10 = 71.30)[treatment_label],
+      status = match_note(observed, target)
+    ) %>%
+    select(check, observed, target, status)
+)
+
+target_checks %>%
+  mutate(
+    observed = round(observed, 2),
+    target = round(target, 2)
+  ) %>%
   kable()
 ```
 
@@ -551,10 +635,11 @@ tibble(
 ## Appendix A1 Checks
 
 Several Appendix A1 cells are directly checkable from the consolidated data.
-The TP10 subject count matches the paper, but the consolidated `sessionid`
-variable has eight distinct TP10 values whereas the paper reports seven
-sessions. That should be traced against the raw session files before treating
-the session count as verified.
+The TP10 subject count matches the paper. The consolidated `sessionid` variable
+has eight distinct TP10 values whereas the paper reports seven sessions. The raw
+session audit shows that all non-crash zTree exports are represented in the
+cleaned data, so this is best treated as a session-definition question or a
+possible article typo rather than a substantive missing-data problem.
 
 ```{r appendix-a1-partial}
 df %>%
@@ -573,6 +658,37 @@ df %>%
   kable()
 ```
 
+### Questionnaire Demographics
+
+The demographic cells in Appendix A1 appear to come from questionnaire
+respondents rather than from every zTree subject. The audit below is aggregate
+only and does not export row-level demographics, majors, birthdates, or free
+text.
+
+```{r appendix-a1-demographics}
+if (!is.null(appendix_demographics)) {
+  appendix_demographics %>%
+    transmute(
+      treatment,
+      demographic_rows,
+      female_count_from_text,
+      female_share_from_dummy = round(female_share_from_dummy, 4),
+      paper_female_share,
+      female_share_rounded_matches_paper,
+      age_mean = round(age_mean, 4),
+      paper_age_mean,
+      age_mean_rounded_matches_paper,
+      age_sd = round(age_sd, 4),
+      paper_age_sd,
+      age_sd_rounded_matches_paper,
+      note
+    ) %>%
+    kable()
+} else {
+  cat("Demographics audit CSV not found.")
+}
+```
+
 ## Remaining Work
 
 - Run the original Stata workflow and compare generated outputs to this R
@@ -580,5 +696,6 @@ df %>%
 - Check Stata's exact `bootstrap` and `mfx compute` standard-error conventions.
 - Add a public-facing `results/` export only after Stata and R outputs are
   reconciled.
-- Trace Appendix A1 gender, age, and session-count cells against raw
-  questionnaire/session records after privacy review.
+- Resolve the small Appendix A1 provenance notes: C10 demographics are close but
+  not exact, and the TP10 seven-session count is probably a typo or counting
+  convention unless lab records show otherwise.

@@ -56,9 +56,10 @@ rmarkdown::render("code/r/replicate_descriptives.Rmd")
 The R document currently verifies the main descriptive cells for Tables 1-3,
 renders the CDF figures, adds bootstrap and nonparametric checks, checks the
 Result 6 control-choice tests, and reproduces the Table 4 point-estimate
-convention. It does not yet replace the canonical Stata workflow for exact
-Stata bootstrap conventions, `mfx compute` standard errors, or final publication
-table formatting.
+convention. It also includes an Appendix A1 status table that pulls from the
+aggregate demographics audit. It does not yet replace the canonical Stata
+workflow for exact Stata bootstrap conventions, `mfx compute` standard errors,
+or final publication table formatting.
 
 The cleaned zTree analysis data can be rebuilt from the private source archive
 extraction with:
@@ -91,6 +92,9 @@ The draft includes consolidated analysis data only:
 The raw zTree session files and row-level questionnaire files remain excluded
 pending privacy and coauthor review. See `DATA_PROVENANCE.md`,
 `DEMOGRAPHICS_AUDIT.md`, and `docs/audit/source_manifest.csv`.
+
+`COAUTHOR_REVIEW_PACKET.md` summarizes the proposed public data scope, remaining
+provenance notes, and release decisions for Gabriel Burdin and Fabio Landini.
 
 ## Citation
 

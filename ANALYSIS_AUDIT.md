@@ -40,7 +40,7 @@ Published article:
 | Text Result 6 | Control-choice proportions: 63.15% in C10 and 77.34% in TP10, Fisher exact p = 0.163 | `code/stata/master_do_file.do`, Result 6 block; `data/processed/merged_treatment_control.dta`; `code/r/replicate_descriptives.Rmd` | Proportions, Fisher exact test, Mann-Whitney test, and R bootstrap CI added; Stata still pending |
 | Table 3 | GCOS agent-scale means and tests by treatment | `code/stata/master_do_file.do`, GCOS block; `data/processed/merged_treatment_control.dta`; `code/r/replicate_descriptives.Rmd` | Means and R test statistics added; Stata still pending |
 | Table 4 | OLS/logit marginal-effect regressions with treatment and standardized GCOS scales | `code/stata/master_do_file.do`, GCOS regression block; `code/r/replicate_descriptives.Rmd` | R point estimates added and match published convention closely; Stata standard errors/stars still pending |
-| Appendix Table A1 | Session counts, subject counts, gender, age, and earnings by treatment | `data/processed/merged_treatment_control.dta`; `code/python/audit_raw_sessions.py`; `code/python/rebuild_clean_data.py`; `code/python/audit_demographics.py` | Subject and earnings cells mostly verified; crash export excluded; TP10 demographics match after rounding; C10 demographics are close but not exact; TP10 has eight zTree run IDs but paper reports seven sessions |
+| Appendix Table A1 | Session counts, subject counts, gender, age, and earnings by treatment | `data/processed/merged_treatment_control.dta`; `code/python/audit_raw_sessions.py`; `code/python/rebuild_clean_data.py`; `code/python/audit_demographics.py` | Subject and earnings cells mostly verified; crash export excluded; TP10 demographics match after rounding; C10 demographics are close but not exact; TP10 has eight zTree run IDs but paper reports seven sessions, likely a counting convention or typo rather than a substantive discrepancy |
 
 ## Verified Descriptive Checks
 
@@ -162,11 +162,12 @@ The next audit pass should compare:
 
 `code/r/replicate_descriptives.Rmd` provides an independent R-based replication
 supplement. It now covers the main descriptive cells, CDF figures, bootstrap
-checks, nonparametric tests, Result 6 control-choice tests, and a Table 4
-point-estimate check. At this stage it is still a supplement, not a replacement
-for the original Stata analysis, because exact Stata parity for bootstrap
-conventions, `mfx compute` standard errors, stars, and table formatting still
-needs to be checked carefully.
+checks, nonparametric tests, Result 6 control-choice tests, a Table 4
+point-estimate check, and the aggregate Appendix A1 demographic audit. At this
+stage it is still a supplement, not a replacement for the original Stata
+analysis, because exact Stata parity for bootstrap conventions, `mfx compute`
+standard errors, stars, and table formatting still needs to be checked
+carefully.
 
 ## Raw-To-Clean Rebuild
 
@@ -191,9 +192,11 @@ against the committed Stata data within tolerance.
   printed to the log. Publication-ready reproduction may require adding explicit
   table-export code for Tables 1 and 2.
 - Appendix Table A1 still has two small provenance questions: C10 questionnaire
-  demographics are close but not exact, and the raw zTree audit suggests the
-  TP10 session-count discrepancy is likely a difference between zTree run
-  identifiers and the session definition used in the paper.
+  demographics are close but not exact, and the paper's seven TP10 sessions may
+  be a lab-session definition or a typo. The raw zTree audit does not suggest a
+  missing-data problem.
 - Any public Zenodo deposit should wait for coauthor approval, especially for raw
   zTree files and any material containing payment, demographic, or session-level
   records.
+- `COAUTHOR_REVIEW_PACKET.md` lists the concrete coauthor decisions needed
+  before a public archival release.
