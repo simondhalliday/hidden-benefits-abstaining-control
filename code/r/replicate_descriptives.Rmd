@@ -1,5 +1,5 @@
 ---
-title: "R Descriptive Replication: Hidden Benefits of Abstaining from Control"
+title: "R Replication Supplement: Hidden Benefits of Abstaining from Control"
 output:
   html_document:
     toc: true
@@ -12,33 +12,116 @@ repo_root <- normalizePath(file.path(input_dir, "..", ".."))
 knitr::opts_knit$set(root.dir = repo_root)
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 
+library(boot)
 library(dplyr)
+library(ggplot2)
 library(haven)
 library(knitr)
+library(lmtest)
+library(sandwich)
 ```
 
-This document is an independent R-based descriptive check for Burdin, Halliday,
-and Landini (2018). It is intended to complement the original Stata replication
-workflow in `code/stata/run_all.do`, not replace it.
+This document is an independent R-based replication supplement for Burdin,
+Halliday, and Landini (2018). It is intended to complement the original Stata
+workflow in `code/stata/run_all.do`, not replace it. The original Stata script
+remains the canonical analysis file until we can execute it and compare every
+output.
+
+The R checks below reproduce the main descriptive tables, nonparametric tests,
+CDF figures, and an R version of the Table 4 regression/marginal-effect
+estimates. Stata-specific details such as exact bootstrap conventions and
+`mfx` standard errors should still be compared against a Stata run.
+
+```{r helpers}
+fmt_num <- function(x, digits = 2) {
+  ifelse(is.na(x), NA_character_, formatC(x, format = "f", digits = digits))
+}
+
+fmt_p <- function(x) {
+  ifelse(
+    is.na(x),
+    NA_character_,
+    ifelse(x < 0.001, "<0.001", formatC(x, format = "f", digits = 3))
+  )
+}
+
+stars <- function(p) {
+  case_when(
+    is.na(p) ~ "",
+    p < 0.01 ~ "***",
+    p < 0.05 ~ "**",
+    p < 0.10 ~ "*",
+    TRUE ~ ""
+  )
+}
+
+fmt_est <- function(estimate, p_value, digits = 3) {
+  paste0(fmt_num(estimate, digits), stars(p_value))
+}
+
+bootstrap_mean_ci <- function(x, reps = 100000, seed = 17884, level = 0.95) {
+  x <- x[!is.na(x)]
+  set.seed(seed)
+  means <- replicate(reps, mean(sample(x, length(x), replace = TRUE)))
+  estimate <- mean(x)
+  se <- sd(means)
+  alpha <- 1 - level
+  tibble(
+    estimate = estimate,
+    se = se,
+    normal_lower = estimate - qnorm(1 - alpha / 2) * se,
+    normal_upper = estimate + qnorm(1 - alpha / 2) * se,
+    percentile_lower = unname(quantile(means, alpha / 2)),
+    percentile_upper = unname(quantile(means, 1 - alpha / 2)),
+    reps = reps
+  )
+}
+
+tidy_wilcox <- function(test, label) {
+  tibble(
+    check = label,
+    method = test$method,
+    statistic = unname(test$statistic),
+    p_value = test$p.value
+  )
+}
+
+tidy_htest <- function(test, label) {
+  tibble(
+    check = label,
+    method = test$method,
+    statistic = unname(test$statistic),
+    p_value = test$p.value
+  )
+}
+```
 
 ```{r load-data}
 data_path <- file.path("data", "processed", "merged_treatment_control.dta")
 df <- read_dta(data_path)
 
-agents <- df %>%
-  filter(playedrolea == 1) %>%
+df <- df %>%
   mutate(
     treatment_label = case_when(
       treatment == 1 ~ "C10",
       treatment == 2 ~ "TP10",
       TRUE ~ as.character(treatment)
-    ),
+    )
+  )
+
+agents <- df %>%
+  filter(playedrolea == 1) %>%
+  mutate(
     diff_no_control_control = transferunbounded - transferbounded,
     published_category = case_when(
       controlpos == 1 ~ "Negative",
       controlneutral == 1 ~ "Neutral",
       controlneg == 1 ~ "Positive",
       TRUE ~ NA_character_
+    ),
+    published_category = factor(
+      published_category,
+      levels = c("Negative", "Neutral", "Positive")
     )
   )
 ```
@@ -51,7 +134,63 @@ agents %>%
   kable()
 ```
 
-## Table 1 Descriptive Cells
+## Figures 1 and 2
+
+The figures below reproduce the empirical CDFs for control and no-control
+transfers among agents.
+
+```{r cdf-data}
+cdf_data <- agents %>%
+  select(treatment_label, transferbounded, transferunbounded) %>%
+  tidyr::pivot_longer(
+    cols = c(transferbounded, transferunbounded),
+    names_to = "condition",
+    values_to = "transfer"
+  ) %>%
+  mutate(
+    condition = recode(
+      condition,
+      transferbounded = "Control",
+      transferunbounded = "No control"
+    )
+  )
+```
+
+```{r cdf-c10, fig.width=7, fig.height=4}
+cdf_data %>%
+  filter(treatment_label == "C10") %>%
+  ggplot(aes(x = transfer, color = condition, linetype = condition)) +
+  stat_ecdf(geom = "step", linewidth = 0.9) +
+  scale_x_continuous(breaks = seq(0, 60, 10)) +
+  labs(
+    title = "Cumulative distributions of transfers for C10",
+    subtitle = "Agents only, n = 38",
+    x = "Transfer (x)",
+    y = "Cumulative probability",
+    color = NULL,
+    linetype = NULL
+  ) +
+  theme_minimal(base_size = 12)
+```
+
+```{r cdf-tp10, fig.width=7, fig.height=4}
+cdf_data %>%
+  filter(treatment_label == "TP10") %>%
+  ggplot(aes(x = transfer, color = condition, linetype = condition)) +
+  stat_ecdf(geom = "step", linewidth = 0.9) +
+  scale_x_continuous(breaks = seq(0, 60, 10)) +
+  labs(
+    title = "Cumulative distributions of transfers for TP10",
+    subtitle = "Agents only, n = 53",
+    x = "Transfer (x)",
+    y = "Cumulative probability",
+    color = NULL,
+    linetype = NULL
+  ) +
+  theme_minimal(base_size = 12)
+```
+
+## Table 1
 
 ```{r table-1-descriptives}
 summarize_transfer <- function(data, variable) {
@@ -93,6 +232,81 @@ agents %>%
   kable()
 ```
 
+### Bootstrap Confidence Intervals
+
+The original Stata file uses `bootstrap` with 100,000 repetitions and seed
+17884. R and Stata use different random-number generators, so the intervals
+below should be treated as an independent check rather than a byte-for-byte
+match to Stata. The normal intervals closely track the published Table 1
+intervals.
+
+```{r table-1-bootstrap}
+agents %>%
+  group_by(treatment_label) %>%
+  group_modify(~ bootstrap_mean_ci(.x$diff_no_control_control)) %>%
+  ungroup() %>%
+  transmute(
+    treatment_label,
+    mean_difference = estimate,
+    normal_95_ci = paste0("[", fmt_num(normal_lower), ", ", fmt_num(normal_upper), "]"),
+    percentile_95_ci = paste0("[", fmt_num(percentile_lower), ", ", fmt_num(percentile_upper), "]"),
+    reps
+  ) %>%
+  kable()
+```
+
+## Nonparametric Tests
+
+These tests mirror the signed-rank, rank-sum, Kruskal-Wallis, and Fisher exact
+checks in `code/stata/master_do_file.do`.
+
+```{r nonparametric-tests}
+c10 <- agents %>% filter(treatment_label == "C10")
+tp10 <- agents %>% filter(treatment_label == "TP10")
+
+test_results <- bind_rows(
+  tidy_wilcox(
+    wilcox.test(c10$transferbounded, c10$transferubx, paired = TRUE, exact = FALSE),
+    "Result 1: C10 control vs modified no-control transfer"
+  ),
+  tidy_wilcox(
+    wilcox.test(c10$transferbounded, c10$transferunbounded, paired = TRUE, exact = FALSE),
+    "Result 2: C10 control vs no-control transfer"
+  ),
+  tidy_wilcox(
+    wilcox.test(tp10$transferbounded, tp10$transferunbounded, paired = TRUE, exact = FALSE),
+    "Result 4: TP10 control vs no-control transfer"
+  ),
+  tidy_wilcox(
+    wilcox.test(tp10$transferbounded, tp10$transferubx, paired = TRUE, exact = FALSE),
+    "Result 3: TP10 control vs modified no-control transfer"
+  ),
+  tidy_wilcox(
+    wilcox.test(transferunbounded ~ treatment_label, data = agents, exact = FALSE),
+    "C10 vs TP10 no-control transfer"
+  ),
+  tidy_wilcox(
+    wilcox.test(transferbounded ~ treatment_label, data = agents, exact = FALSE),
+    "C10 vs TP10 control transfer"
+  ),
+  tidy_htest(
+    kruskal.test(transferunbounded ~ treatment_label, data = agents),
+    "Kruskal-Wallis: no-control transfer by treatment"
+  ),
+  tidy_htest(
+    kruskal.test(transferbounded ~ treatment_label, data = agents),
+    "Kruskal-Wallis: control transfer by treatment"
+  )
+)
+
+test_results %>%
+  mutate(
+    statistic = round(statistic, 3),
+    p_value = fmt_p(p_value)
+  ) %>%
+  kable()
+```
+
 ## Table 2 Response Categories
 
 Published Table 2 reports response categories from the perspective of response
@@ -103,19 +317,19 @@ when matching the published table.
 ```{r table-2-categories}
 agents %>%
   filter(!is.na(published_category)) %>%
-  group_by(treatment_label, published_category) %>%
-  summarize(
-    n = n(),
-    share = n() / nrow(cur_data_all()),
-    mean_control_transfer = mean(transferbounded, na.rm = TRUE),
-    sd_control_transfer = sd(transferbounded, na.rm = TRUE),
-    .groups = "drop_last"
+  count(treatment_label, published_category, name = "n") %>%
+  left_join(
+    agents %>%
+      group_by(treatment_label, published_category) %>%
+      summarize(
+        mean_control_transfer = mean(transferbounded, na.rm = TRUE),
+        sd_control_transfer = sd(transferbounded, na.rm = TRUE),
+        .groups = "drop"
+      ),
+    by = c("treatment_label", "published_category")
   ) %>%
-  mutate(
-    treatment_n = sum(n),
-    share = n / treatment_n,
-    share_percent = 100 * share
-  ) %>%
+  group_by(treatment_label) %>%
+  mutate(share_percent = 100 * n / sum(n)) %>%
   ungroup() %>%
   select(
     treatment_label,
@@ -129,7 +343,22 @@ agents %>%
   kable()
 ```
 
-## Table 3 GCOS Means
+```{r table-2-fisher}
+fisher_results <- bind_rows(
+  tidy_htest(fisher.test(table(agents$controlpos, agents$treatment_label)), "Published negative category"),
+  tidy_htest(fisher.test(table(agents$controlneutral, agents$treatment_label)), "Published neutral category"),
+  tidy_htest(fisher.test(table(agents$controlneg, agents$treatment_label)), "Published positive category")
+)
+
+fisher_results %>%
+  mutate(
+    statistic = NA,
+    p_value = fmt_p(p_value)
+  ) %>%
+  kable()
+```
+
+## Table 3 GCOS Means and Tests
 
 ```{r table-3-gcos}
 agents %>%
@@ -144,34 +373,212 @@ agents %>%
   kable()
 ```
 
-## Result 6 Control Choice Proportions
+```{r table-3-tests}
+gcos_tests <- bind_rows(
+  tidy_htest(t.test(autonomy ~ treatment_label, data = agents), "Autonomy t-test"),
+  tidy_htest(t.test(impersonal ~ treatment_label, data = agents), "Impersonal t-test"),
+  tidy_htest(t.test(controlpref ~ treatment_label, data = agents), "Control t-test"),
+  tidy_wilcox(wilcox.test(autonomy ~ treatment_label, data = agents, exact = FALSE), "Autonomy Mann-Whitney"),
+  tidy_wilcox(wilcox.test(impersonal ~ treatment_label, data = agents, exact = FALSE), "Impersonal Mann-Whitney"),
+  tidy_wilcox(wilcox.test(controlpref ~ treatment_label, data = agents, exact = FALSE), "Control Mann-Whitney")
+)
 
-```{r result-6-control-choice}
-bind_rows(
-  df %>%
-    filter(playedroleb == 1, treatment == 1) %>%
-    summarize(
-      group = "C10 principals",
-      observations = n(),
-      share_choosing_control = mean(transferisbounded, na.rm = TRUE)
-    ),
-  df %>%
-    filter(playedrolec == 1, treatment == 2) %>%
-    summarize(
-      group = "TP10 third parties",
-      observations = n(),
-      share_choosing_control = mean(transferisbounded, na.rm = TRUE)
-    )
-) %>%
-  mutate(share_choosing_control = round(100 * share_choosing_control, 2)) %>%
+gcos_tests %>%
+  mutate(
+    statistic = round(statistic, 3),
+    p_value = fmt_p(p_value)
+  ) %>%
   kable()
 ```
 
-## Next Steps
+## Table 4 Regression Check
 
-The next R pass should add:
+The first two columns below are OLS coefficients with HC3 robust p-values, as in
+the Stata script. The remaining columns are logit marginal effects evaluated at
+sample means. For the binary TP10 indicator, the value is the discrete change
+from C10 to TP10 at the means of the standardized GCOS scales. This convention
+matches the published point estimates closely; the standard errors and stars
+should still be checked against Stata's `mfx compute` output.
 
-- Bootstrap confidence intervals for Table 1 with matched seeds and conventions.
-- Wilcoxon signed-rank, Mann-Whitney, Fisher exact, and Kruskal-Wallis tests.
-- Table 4 regression estimates and marginal effects.
-- Rendered figures corresponding to Figs. 1 and 2.
+```{r table-4-functions}
+ols_cell <- function(model, term) {
+  ct <- coeftest(model, vcov. = vcovHC(model, type = "HC3"))
+  tibble(
+    term = term,
+    estimate = unname(ct[term, "Estimate"]),
+    p_value = unname(ct[term, "Pr(>|t|)"])
+  )
+}
+
+logit_mfx_at_means <- function(data, outcome, term) {
+  model <- glm(
+    reformulate(c("treatdum", "stauto", "stimp", "stcont"), response = outcome),
+    data = data,
+    family = binomial()
+  )
+
+  means <- data.frame(
+    treatdum = mean(data$treatdum, na.rm = TRUE),
+    stauto = mean(data$stauto, na.rm = TRUE),
+    stimp = mean(data$stimp, na.rm = TRUE),
+    stcont = mean(data$stcont, na.rm = TRUE)
+  )
+
+  if (term == "treatdum") {
+    means0 <- means
+    means1 <- means
+    means0$treatdum <- 0
+    means1$treatdum <- 1
+    estimate <- predict(model, means1, type = "response") -
+      predict(model, means0, type = "response")
+  } else {
+    p_at_means <- predict(model, means, type = "response")
+    estimate <- coef(model)[term] * p_at_means * (1 - p_at_means)
+  }
+
+  ct <- coeftest(model, vcov. = vcovHC(model, type = "HC0"))
+  tibble(
+    term = term,
+    estimate = unname(estimate),
+    p_value = unname(ct[term, "Pr(>|z|)"])
+  )
+}
+
+terms <- c("treatdum", "stauto", "stimp", "stcont")
+term_labels <- c(
+  treatdum = "D: TP10 treatment = 1",
+  stauto = "Standardized autonomy scale",
+  stimp = "Standardized impersonal scale",
+  stcont = "Standardized control scale"
+)
+
+ols_xnc <- lm(transferunbounded ~ treatdum + stauto + stimp + stcont, data = agents)
+ols_diff <- lm(diff_no_control_control ~ treatdum + stauto + stimp + stcont, data = agents)
+
+table4 <- tibble(term = terms, label = unname(term_labels[terms])) %>%
+  rowwise() %>%
+  mutate(
+    xNC = list(ols_cell(ols_xnc, term)),
+    `xNC - xC` = list(ols_cell(ols_diff, term)),
+    Negative = list(logit_mfx_at_means(agents, "controlpos", term)),
+    Neutral = list(logit_mfx_at_means(agents, "controlneutral", term)),
+    Positive = list(logit_mfx_at_means(agents, "controlneg", term))
+  ) %>%
+  ungroup()
+
+table4 %>%
+  rowwise() %>%
+  transmute(
+    variable = label,
+    xNC = fmt_est(xNC$estimate, xNC$p_value),
+    `xNC - xC` = fmt_est(`xNC - xC`$estimate, `xNC - xC`$p_value),
+    Negative = fmt_est(Negative$estimate, Negative$p_value),
+    Neutral = fmt_est(Neutral$estimate, Neutral$p_value),
+    Positive = fmt_est(Positive$estimate, Positive$p_value)
+  ) %>%
+  ungroup() %>%
+  kable()
+```
+
+## Result 6 Control Choice Proportions
+
+```{r result-6-control-choice}
+control_choice <- bind_rows(
+  df %>%
+    filter(playedroleb == 1, treatment == 1) %>%
+    transmute(treatment_label, controller = transferisbounded, group = "C10 principals"),
+  df %>%
+    filter(playedrolec == 1, treatment == 2) %>%
+    transmute(treatment_label, controller = transferisbounded, group = "TP10 third parties")
+)
+
+control_choice %>%
+  group_by(group) %>%
+  summarize(
+    observations = n(),
+    share_choosing_control = 100 * mean(controller, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(share_choosing_control = round(share_choosing_control, 2)) %>%
+  kable()
+```
+
+```{r result-6-tests}
+result6_tests <- bind_rows(
+  tidy_htest(fisher.test(table(control_choice$controller, control_choice$treatment_label)), "Fisher exact: control choice by treatment"),
+  tidy_wilcox(wilcox.test(controller ~ treatment_label, data = control_choice, exact = FALSE), "Mann-Whitney: control choice by treatment")
+)
+
+result6_tests %>%
+  mutate(
+    statistic = round(statistic, 3),
+    p_value = fmt_p(p_value)
+  ) %>%
+  kable()
+```
+
+```{r result-6-bootstrap}
+set.seed(80023)
+c10_controller <- control_choice$controller[control_choice$treatment_label == "C10"]
+tp10_controller <- control_choice$controller[control_choice$treatment_label == "TP10"]
+result6_estimate <- mean(tp10_controller) - mean(c10_controller)
+result6_boot <- replicate(
+  100000,
+  mean(sample(tp10_controller, length(tp10_controller), replace = TRUE)) -
+    mean(sample(c10_controller, length(c10_controller), replace = TRUE))
+)
+
+tibble(
+  estimate = result6_estimate,
+  normal_95_ci = paste0(
+    "[",
+    fmt_num(result6_estimate - qnorm(0.975) * sd(result6_boot)),
+    ", ",
+    fmt_num(result6_estimate + qnorm(0.975) * sd(result6_boot)),
+    "]"
+  ),
+  percentile_95_ci = paste0(
+    "[",
+    fmt_num(unname(quantile(result6_boot, 0.025))),
+    ", ",
+    fmt_num(unname(quantile(result6_boot, 0.975))),
+    "]"
+  )
+) %>%
+  kable()
+```
+
+## Appendix A1 Checks
+
+Several Appendix A1 cells are directly checkable from the consolidated data.
+The TP10 subject count matches the paper, but the consolidated `sessionid`
+variable has eight distinct TP10 values whereas the paper reports seven
+sessions. That should be traced against the raw session files before treating
+the session count as verified.
+
+```{r appendix-a1-partial}
+df %>%
+  group_by(treatment_label) %>%
+  summarize(
+    sessions_in_consolidated_data = n_distinct(sessionid),
+    subjects = n(),
+    agent_earnings = mean(finalearnings[playedrolea == 1], na.rm = TRUE),
+    agent_earnings_sd = sd(finalearnings[playedrolea == 1], na.rm = TRUE),
+    principal_earnings = mean(finalearnings[playedroleb == 1], na.rm = TRUE),
+    principal_earnings_sd = sd(finalearnings[playedroleb == 1], na.rm = TRUE),
+    third_party_earnings = mean(finalearnings[playedrolec == 1], na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(across(where(is.numeric), ~ round(.x, 2))) %>%
+  kable()
+```
+
+## Remaining Work
+
+- Run the original Stata workflow and compare generated outputs to this R
+  supplement.
+- Check Stata's exact `bootstrap` and `mfx compute` standard-error conventions.
+- Add a public-facing `results/` export only after Stata and R outputs are
+  reconciled.
+- Trace Appendix A1 gender, age, and session-count cells against raw
+  questionnaire/session records after privacy review.

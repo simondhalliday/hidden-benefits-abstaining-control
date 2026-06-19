@@ -53,9 +53,12 @@ An R-based descriptive supplement is also available:
 rmarkdown::render("code/r/replicate_descriptives.Rmd")
 ```
 
-The R document currently verifies the main descriptive cells for Tables 1-3 and
-the control-choice proportions. It does not yet replace the canonical Stata
-workflow for bootstrap intervals, exact tests, or Table 4.
+The R document currently verifies the main descriptive cells for Tables 1-3,
+renders the CDF figures, adds bootstrap and nonparametric checks, checks the
+Result 6 control-choice tests, and reproduces the Table 4 point-estimate
+convention. It does not yet replace the canonical Stata workflow for exact
+Stata bootstrap conventions, `mfx compute` standard errors, or final publication
+table formatting.
 
 ## Data included
 

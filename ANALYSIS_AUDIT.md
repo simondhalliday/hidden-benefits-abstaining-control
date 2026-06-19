@@ -27,13 +27,13 @@ Published article:
 
 | Published item | Paper target | Current source in repo | Current status |
 | --- | --- | --- | --- |
-| Fig. 1 | CDF of control and no-control transfers in C10, agents only, n = 38 | `code/stata/master_do_file.do`, Result 1 block; `data/processed/merged_treatment_control.dta` | Requires Stata execution; data sample size verified |
-| Table 1 | Mean, SD, quartiles, and bootstrap CI for control/no-control transfers in C10 and TP10 | `code/stata/master_do_file.do`, Result 2 block; `data/processed/merged_treatment_control.dta` | Descriptive cells verified; bootstrap CIs require Stata or independent replication |
-| Fig. 2 | CDF of control and no-control transfers in TP10, agents only, n = 53 | `code/stata/master_do_file.do`, Result 3 block; `data/processed/merged_treatment_control.dta` | Requires Stata execution; data sample size verified |
+| Fig. 1 | CDF of control and no-control transfers in C10, agents only, n = 38 | `code/stata/master_do_file.do`, Result 1 block; `data/processed/merged_treatment_control.dta`; `code/r/replicate_descriptives.Rmd` | R figure renders; Stata figure still pending |
+| Table 1 | Mean, SD, quartiles, and bootstrap CI for control/no-control transfers in C10 and TP10 | `code/stata/master_do_file.do`, Result 2 block; `data/processed/merged_treatment_control.dta`; `code/r/replicate_descriptives.Rmd` | Descriptive cells verified; R bootstrap normal CIs added; Stata bootstrap still pending |
+| Fig. 2 | CDF of control and no-control transfers in TP10, agents only, n = 53 | `code/stata/master_do_file.do`, Result 3 block; `data/processed/merged_treatment_control.dta`; `code/r/replicate_descriptives.Rmd` | R figure renders; Stata figure still pending |
 | Table 2 | Shares of negative/neutral/positive response categories and mean control transfers by category | `code/stata/master_do_file.do`, Result 5 block; `data/processed/merged_treatment_control.dta` | Numeric cells verified after label-orientation check below |
-| Text Result 6 | Control-choice proportions: 63.15% in C10 and 77.34% in TP10, Fisher exact p = 0.163 | `code/stata/master_do_file.do`, Result 6 block; `data/processed/merged_treatment_control.dta` | Proportions verified; Fisher exact and bootstrap CI require execution |
-| Table 3 | GCOS agent-scale means and tests by treatment | `code/stata/master_do_file.do`, GCOS block; `data/processed/merged_treatment_control.dta` | Means verified; test statistics require execution |
-| Table 4 | OLS/logit marginal-effect regressions with treatment and standardized GCOS scales | `code/stata/master_do_file.do`, GCOS regression block | Requires Stata execution and comparison |
+| Text Result 6 | Control-choice proportions: 63.15% in C10 and 77.34% in TP10, Fisher exact p = 0.163 | `code/stata/master_do_file.do`, Result 6 block; `data/processed/merged_treatment_control.dta`; `code/r/replicate_descriptives.Rmd` | Proportions, Fisher exact test, Mann-Whitney test, and R bootstrap CI added; Stata still pending |
+| Table 3 | GCOS agent-scale means and tests by treatment | `code/stata/master_do_file.do`, GCOS block; `data/processed/merged_treatment_control.dta`; `code/r/replicate_descriptives.Rmd` | Means and R test statistics added; Stata still pending |
+| Table 4 | OLS/logit marginal-effect regressions with treatment and standardized GCOS scales | `code/stata/master_do_file.do`, GCOS regression block; `code/r/replicate_descriptives.Rmd` | R point estimates added and match published convention closely; Stata standard errors/stars still pending |
 | Appendix Table A1 | Session counts, subject counts, gender, age, and earnings by treatment | `data/processed/merged_treatment_control.dta`; source questionnaire/payment variables need review | Some sample counts verified; full table requires variable audit |
 
 ## Verified Descriptive Checks
@@ -154,11 +154,13 @@ The next audit pass should compare:
 
 ## R Replication Supplement
 
-`code/r/replicate_descriptives.Rmd` provides an independent R-based descriptive
-check of the included Stata data. At this stage it is a supplement, not a
-replacement for the original Stata analysis, because exact parity for bootstrap
-confidence intervals, logit marginal effects, and table formatting still needs
-to be checked carefully.
+`code/r/replicate_descriptives.Rmd` provides an independent R-based replication
+supplement. It now covers the main descriptive cells, CDF figures, bootstrap
+checks, nonparametric tests, Result 6 control-choice tests, and a Table 4
+point-estimate check. At this stage it is still a supplement, not a replacement
+for the original Stata analysis, because exact Stata parity for bootstrap
+conventions, `mfx compute` standard errors, stars, and table formatting still
+needs to be checked carefully.
 
 ## Open Issues
 
