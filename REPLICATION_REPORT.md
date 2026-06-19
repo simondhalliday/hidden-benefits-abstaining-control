@@ -25,6 +25,9 @@ This is an initial public draft of the replication package. The Stata code has b
   without exporting raw questionnaire rows.
 - Expanded `code/r/replicate_descriptives.Rmd` with a third-party status table,
   published-target checks, and Appendix A1 demographic audit output.
+- Added tracked R review outputs in `results/tables/r/` and
+  `results/figures/r/`.
+- Added `VERIFY.md` with R-only, raw-provenance, and Stata verification steps.
 - Added `COAUTHOR_REVIEW_PACKET.md` to summarize the public data scope and
   coauthor approval questions.
 

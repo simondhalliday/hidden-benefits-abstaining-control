@@ -61,6 +61,9 @@ aggregate demographics audit. It does not yet replace the canonical Stata
 workflow for exact Stata bootstrap conventions, `mfx compute` standard errors,
 or final publication table formatting.
 
+See `VERIFY.md` for the current R-only and Stata verification workflows. The R
+render writes review outputs to `results/tables/r/` and `results/figures/r/`.
+
 The cleaned zTree analysis data can be rebuilt from the private source archive
 extraction with:
 

@@ -1,0 +1,8 @@
+"item","current_r_status","stata_status","note"
+"Figures 1 and 2","R renders CDFs from included data","Pending","Visual comparison to article still needed"
+"Table 1","Means, SDs, quartiles, and mean differences match","Pending","R bootstrap is an independent check, not exact Stata RNG parity"
+"Table 2","Shares and control-transfer means match after label-orientation check","Pending","Published labels are response to control abstinence"
+"Table 3","GCOS means match","Pending","R t-tests and Mann-Whitney checks included"
+"Table 4","Point-estimate convention reproduced closely","Pending","Stata `mfx compute` standard errors and stars still need canonical check"
+"Result 6","Control-choice proportions and tests computed","Pending","Published percentages match up to rounding convention"
+"Appendix A1","Subject/earnings cells and questionnaire demographics partly checked","Pending","C10 demographics close but not exact; TP10 session count may be typo or convention"

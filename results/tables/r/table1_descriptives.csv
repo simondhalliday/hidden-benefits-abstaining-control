@@ -1,0 +1,5 @@
+"treatment_label","variable","mean","sd","q1","median","q3"
+"C10","Control transfer",17.47,11.76,10,10,20
+"TP10","Control transfer",18,11.62,10,10,25
+"C10","No-control transfer",21.24,19.03,0,18.5,40
+"TP10","No-control transfer",12.87,15.5,0,5,30

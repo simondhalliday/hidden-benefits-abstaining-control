@@ -14,6 +14,10 @@ results/tables/*
 !results/figures/.gitkeep
 !results/logs/.gitkeep
 !results/tables/.gitkeep
+!results/figures/r/
+!results/figures/r/*.png
+!results/tables/r/
+!results/tables/r/*.csv
 
 # Do not commit raw legacy archive dumps.
 raw/

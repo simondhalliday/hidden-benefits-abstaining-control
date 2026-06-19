@@ -1,0 +1,7 @@
+"check","observed","target","status"
+"Agent sample size: C10",38,38,"matches"
+"Agent sample size: TP10",53,53,"matches"
+"Table 1 mean xNC - xC: C10",3.76,3.76,"matches after rounding"
+"Table 1 mean xNC - xC: TP10",-5.13,-5.13,"matches after rounding"
+"Table 3 autonomy mean: C10",73.53,73.53,"matches after rounding"
+"Table 3 autonomy mean: TP10",71.3,71.3,"matches after rounding"

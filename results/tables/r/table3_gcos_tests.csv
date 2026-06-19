@@ -1,0 +1,7 @@
+"check","method","statistic","p_value"
+"Autonomy t-test","Welch Two Sample t-test",1.611,"0.111"
+"Impersonal t-test","Welch Two Sample t-test",-0.397,"0.692"
+"Control t-test","Welch Two Sample t-test",0.771,"0.443"
+"Autonomy Mann-Whitney","Wilcoxon rank sum test with continuity correction",1189,"0.143"
+"Impersonal Mann-Whitney","Wilcoxon rank sum test with continuity correction",952,"0.661"
+"Control Mann-Whitney","Wilcoxon rank sum test with continuity correction",1104,"0.437"

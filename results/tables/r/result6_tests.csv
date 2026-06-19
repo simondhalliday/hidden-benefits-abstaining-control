@@ -1,0 +1,3 @@
+"check","method","p_value","statistic"
+"Fisher exact: control choice by treatment","Fisher's Exact Test for Count Data","0.163",NA
+"Mann-Whitney: control choice by treatment","Wilcoxon rank sum test with continuity correction","0.143",864

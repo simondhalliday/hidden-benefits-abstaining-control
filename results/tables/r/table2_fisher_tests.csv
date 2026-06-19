@@ -1,0 +1,4 @@
+"check","method","p_value","statistic"
+"Published negative category","Fisher's Exact Test for Count Data","0.136",NA
+"Published neutral category","Fisher's Exact Test for Count Data","0.045",NA
+"Published positive category","Fisher's Exact Test for Count Data","<0.001",NA
