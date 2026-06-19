@@ -18,6 +18,7 @@ This repository is a working public draft of the replication package. It preserv
 
 ```text
 code/stata/                 Stata run script and curated master analysis file
+code/r/                     R-based descriptive replication supplement
 data/processed/             Consolidated analysis data included in this draft
 instruments/ztree/          Final zTree treatment/questionnaire programs
 instruments/instructions/   Final instructions, questionnaire, and appendix files
@@ -45,6 +46,16 @@ do code/stata/run_all.do
 ```
 
 The script writes logs to `results/logs/`, figures to `results/figures/`, and tables to `results/tables/`.
+
+An R-based descriptive supplement is also available:
+
+```r
+rmarkdown::render("code/r/replicate_descriptives.Rmd")
+```
+
+The R document currently verifies the main descriptive cells for Tables 1-3 and
+the control-choice proportions. It does not yet replace the canonical Stata
+workflow for bootstrap intervals, exact tests, or Table 4.
 
 ## Data included
 

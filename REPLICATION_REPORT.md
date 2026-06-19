@@ -11,6 +11,10 @@ This is an initial public draft of the replication package. The Stata code has b
 - Updated the copied master script to use repository-relative data and output paths.
 - Added final zTree program files and final instructions/questionnaire materials.
 - Generated an audit manifest of the source archive.
+- Added `ANALYSIS_AUDIT.md` mapping published results to the current code/data.
+- Added `code/r/replicate_descriptives.Rmd`, an R-based descriptive check that
+  currently reproduces the main published descriptive cells for Tables 1-3 and
+  the Result 6 control-choice proportions.
 
 ## What remains
 
@@ -19,6 +23,9 @@ This is an initial public draft of the replication package. The Stata code has b
 - Compare generated tables and figures to the published article.
 - Document exact matches, rounding differences, and any unresolved discrepancies.
 - Review data-release permissions with coauthors before Zenodo deposit.
+- Extend the R supplement to cover bootstrap confidence intervals, exact tests,
+  figures, and Table 4 regressions if a parallel open-source replication remains
+  useful.
 
 ## Known caveats
 

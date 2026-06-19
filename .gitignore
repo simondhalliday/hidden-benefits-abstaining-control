@@ -3,6 +3,7 @@
 *.tmp
 *.bak
 *.smcl
+code/r/*.html
 
 # Keep generated output folders but ignore generated contents.
 results/figures/*

@@ -1,0 +1,177 @@
+---
+title: "R Descriptive Replication: Hidden Benefits of Abstaining from Control"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+---
+
+```{r setup}
+input_dir <- dirname(knitr::current_input(dir = TRUE))
+repo_root <- normalizePath(file.path(input_dir, "..", ".."))
+knitr::opts_knit$set(root.dir = repo_root)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+library(dplyr)
+library(haven)
+library(knitr)
+```
+
+This document is an independent R-based descriptive check for Burdin, Halliday,
+and Landini (2018). It is intended to complement the original Stata replication
+workflow in `code/stata/run_all.do`, not replace it.
+
+```{r load-data}
+data_path <- file.path("data", "processed", "merged_treatment_control.dta")
+df <- read_dta(data_path)
+
+agents <- df %>%
+  filter(playedrolea == 1) %>%
+  mutate(
+    treatment_label = case_when(
+      treatment == 1 ~ "C10",
+      treatment == 2 ~ "TP10",
+      TRUE ~ as.character(treatment)
+    ),
+    diff_no_control_control = transferunbounded - transferbounded,
+    published_category = case_when(
+      controlpos == 1 ~ "Negative",
+      controlneutral == 1 ~ "Neutral",
+      controlneg == 1 ~ "Positive",
+      TRUE ~ NA_character_
+    )
+  )
+```
+
+## Sample Sizes
+
+```{r sample-sizes}
+agents %>%
+  count(treatment_label, name = "agents") %>%
+  kable()
+```
+
+## Table 1 Descriptive Cells
+
+```{r table-1-descriptives}
+summarize_transfer <- function(data, variable) {
+  x <- data[[variable]]
+  tibble(
+    mean = mean(x, na.rm = TRUE),
+    sd = sd(x, na.rm = TRUE),
+    q1 = as.numeric(quantile(x, 0.25, na.rm = TRUE)),
+    median = median(x, na.rm = TRUE),
+    q3 = as.numeric(quantile(x, 0.75, na.rm = TRUE))
+  )
+}
+
+table1_control <- agents %>%
+  group_by(treatment_label) %>%
+  group_modify(~ summarize_transfer(.x, "transferbounded")) %>%
+  mutate(variable = "Control transfer")
+
+table1_no_control <- agents %>%
+  group_by(treatment_label) %>%
+  group_modify(~ summarize_transfer(.x, "transferunbounded")) %>%
+  mutate(variable = "No-control transfer")
+
+bind_rows(table1_control, table1_no_control) %>%
+  select(treatment_label, variable, mean, sd, q1, median, q3) %>%
+  mutate(across(where(is.numeric), ~ round(.x, 2))) %>%
+  kable()
+```
+
+```{r table-1-differences}
+agents %>%
+  group_by(treatment_label) %>%
+  summarize(
+    mean_difference = mean(diff_no_control_control, na.rm = TRUE),
+    sd_difference = sd(diff_no_control_control, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(across(where(is.numeric), ~ round(.x, 2))) %>%
+  kable()
+```
+
+## Table 2 Response Categories
+
+Published Table 2 reports response categories from the perspective of response
+to control abstinence. The Stata data labels `controlpos` and `controlneg` from
+the perspective of response to control, so the non-neutral labels are reversed
+when matching the published table.
+
+```{r table-2-categories}
+agents %>%
+  filter(!is.na(published_category)) %>%
+  group_by(treatment_label, published_category) %>%
+  summarize(
+    n = n(),
+    share = n() / nrow(cur_data_all()),
+    mean_control_transfer = mean(transferbounded, na.rm = TRUE),
+    sd_control_transfer = sd(transferbounded, na.rm = TRUE),
+    .groups = "drop_last"
+  ) %>%
+  mutate(
+    treatment_n = sum(n),
+    share = n / treatment_n,
+    share_percent = 100 * share
+  ) %>%
+  ungroup() %>%
+  select(
+    treatment_label,
+    published_category,
+    n,
+    share_percent,
+    mean_control_transfer,
+    sd_control_transfer
+  ) %>%
+  mutate(across(where(is.numeric), ~ round(.x, 2))) %>%
+  kable()
+```
+
+## Table 3 GCOS Means
+
+```{r table-3-gcos}
+agents %>%
+  group_by(treatment_label) %>%
+  summarize(
+    autonomy = mean(autonomy, na.rm = TRUE),
+    impersonal = mean(impersonal, na.rm = TRUE),
+    control = mean(controlpref, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(across(where(is.numeric), ~ round(.x, 2))) %>%
+  kable()
+```
+
+## Result 6 Control Choice Proportions
+
+```{r result-6-control-choice}
+bind_rows(
+  df %>%
+    filter(playedroleb == 1, treatment == 1) %>%
+    summarize(
+      group = "C10 principals",
+      observations = n(),
+      share_choosing_control = mean(transferisbounded, na.rm = TRUE)
+    ),
+  df %>%
+    filter(playedrolec == 1, treatment == 2) %>%
+    summarize(
+      group = "TP10 third parties",
+      observations = n(),
+      share_choosing_control = mean(transferisbounded, na.rm = TRUE)
+    )
+) %>%
+  mutate(share_choosing_control = round(100 * share_choosing_control, 2)) %>%
+  kable()
+```
+
+## Next Steps
+
+The next R pass should add:
+
+- Bootstrap confidence intervals for Table 1 with matched seeds and conventions.
+- Wilcoxon signed-rank, Mann-Whitney, Fisher exact, and Kruskal-Wallis tests.
+- Table 4 regression estimates and marginal effects.
+- Rendered figures corresponding to Figs. 1 and 2.
