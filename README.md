@@ -60,6 +60,16 @@ convention. It does not yet replace the canonical Stata workflow for exact
 Stata bootstrap conventions, `mfx compute` standard errors, or final publication
 table formatting.
 
+The cleaned zTree analysis data can be rebuilt from the private source archive
+extraction with:
+
+```bash
+python code/python/rebuild_clean_data.py --source /path/to/Autonomy_Control
+```
+
+This writes row-level rebuilt files to ignored `tmp/` outputs and aggregate audit
+reports to `docs/audit/`.
+
 ## Data included
 
 The draft includes consolidated analysis data only:

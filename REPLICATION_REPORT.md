@@ -16,6 +16,10 @@ This is an initial public draft of the replication package. The Stata code has b
   that currently reproduces the main published descriptive cells for Tables
   1-3, renders the CDF figures, adds bootstrap and nonparametric checks, checks
   Result 6, and reproduces the Table 4 point-estimate convention.
+- Added `code/python/rebuild_clean_data.py`, which rebuilds the cleaned zTree
+  analysis data from raw zTree exports and derives the main Stata analysis
+  variables. The current rebuild passes all committed raw-to-clean and
+  derived-variable audit checks.
 
 ## What remains
 
@@ -27,6 +31,7 @@ This is an initial public draft of the replication package. The Stata code has b
 - Compare the R supplement against Stata once Stata is available, especially
   bootstrap conventions, `mfx compute` standard errors, and publication table
   formatting.
+- Finish the questionnaire/demographic provenance audit for Appendix Table A1.
 
 ## Known caveats
 

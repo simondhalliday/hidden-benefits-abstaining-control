@@ -1,0 +1,10 @@
+relative_path,session_values,rows,gender_nonmissing,age_nonmissing,female_share,mean_age,note
+data-autonomy/2014.04.25 - T1/question_140425_1519.xlsx,140425_1519,15,0,0,,,aggregate only; raw free-text not exported
+data-autonomy/2014.04.25 - T2/questionnaire.xlsx,140425_1709,21,21,21,0.5238095238095238,19.80952380952381,aggregate only; raw free-text not exported
+data-autonomy/2014.04.29 - C2/questionnaire_140429_0920.xlsx,140429_0920,20,20,20,0.55,21.4,aggregate only; raw free-text not exported
+data-autonomy/2014.04.29 - C3/questionnaire_140429_1147.xlsx,140429_1147,18,0,0,,,aggregate only; raw free-text not exported
+data-autonomy/2014.05.01 - C4/questionnaire_. . . . . . ..xlsx,140501_0927,14,0,0,,,aggregate only; raw free-text not exported
+data-autonomy/2014.05.01 - T3/questionnaire_140501_1052.xlsx,140501_1052,18,18,18,0.5,22.11111111111111,aggregate only; raw free-text not exported
+data-autonomy/2014.05.01 - T4/questionnaire_140501_1213.xlsx,140501_1213;140501_1214;140501_1215;140501_1216;140501_1217;140501_1218;140501_1219;140501_1220;140501_1221;140501_1222;140501_1223;140501_1224;140501_1225;140501_1226;140501_1227;140501_1228;140501_1229;140501_1230,18,18,18,0.6666666666666666,19.555555555555557,aggregate only; raw free-text not exported
+data-autonomy/Consolidated/Workbook3.xlsx,,46,44,46,0.4318181818181818,20.638863712465774,aggregate only; raw free-text not exported
+data-autonomy/Consolidated/questionnaires_treatment.xlsx,,104,104,104,0.5288461538461539,20.586007526786304,aggregate only; raw free-text not exported

@@ -1,0 +1,23 @@
+variable,status,detail
+pid,pass,string_mismatch_count=0
+finalearnings,pass,max_abs_diff=7.629394538e-07; mismatch_count=0
+autonomy,pass,max_abs_diff=0; mismatch_count=0
+impersonal,pass,max_abs_diff=0; mismatch_count=0
+controlpref,pass,max_abs_diff=0; mismatch_count=0
+transdif,pass,max_abs_diff=0; mismatch_count=0
+treatmentstring,pass,string_mismatch_count=0
+transferubx,pass,max_abs_diff=0; mismatch_count=0
+transdifxb,pass,max_abs_diff=0; mismatch_count=0
+controlneg,pass,max_abs_diff=0; mismatch_count=0
+stauto,pass,max_abs_diff=1.116951798e-07; mismatch_count=0
+stimp,pass,max_abs_diff=7.482726794e-08; mismatch_count=0
+stcont,pass,max_abs_diff=2.217505646e-07; mismatch_count=0
+treatdum,pass,max_abs_diff=0; mismatch_count=0
+tpstimp,pass,max_abs_diff=7.482726794e-08; mismatch_count=0
+tpstauto,pass,max_abs_diff=1.116951798e-07; mismatch_count=0
+tpstcont,pass,max_abs_diff=2.217505646e-07; mismatch_count=0
+controlpos,pass,max_abs_diff=0; mismatch_count=0
+controlneutral,pass,max_abs_diff=0; mismatch_count=0
+controlcat,pass,string_mismatch_count=0
+controlcats,pass,max_abs_diff=0; mismatch_count=0
+categories,pass,string_mismatch_count=0

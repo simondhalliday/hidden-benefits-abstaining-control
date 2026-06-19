@@ -19,6 +19,9 @@ Published article:
   Stata replication has not yet been executed.
 - The included Stata data reproduce the published sample sizes and the headline
   descriptive statistics for Tables 1-3 and Appendix Table A1.
+- The cleaned zTree analysis data can now be rebuilt from the raw zTree exports
+  with `code/python/rebuild_clean_data.py`; the rebuild matches the committed
+  cleaned CSV and derived Stata variables within floating-point tolerance.
 - The Stata script appears to generate the two published cumulative distribution
   figures and the regression outputs underlying Table 4, but exact execution and
   output comparison remain pending.
@@ -34,7 +37,7 @@ Published article:
 | Text Result 6 | Control-choice proportions: 63.15% in C10 and 77.34% in TP10, Fisher exact p = 0.163 | `code/stata/master_do_file.do`, Result 6 block; `data/processed/merged_treatment_control.dta`; `code/r/replicate_descriptives.Rmd` | Proportions, Fisher exact test, Mann-Whitney test, and R bootstrap CI added; Stata still pending |
 | Table 3 | GCOS agent-scale means and tests by treatment | `code/stata/master_do_file.do`, GCOS block; `data/processed/merged_treatment_control.dta`; `code/r/replicate_descriptives.Rmd` | Means and R test statistics added; Stata still pending |
 | Table 4 | OLS/logit marginal-effect regressions with treatment and standardized GCOS scales | `code/stata/master_do_file.do`, GCOS regression block; `code/r/replicate_descriptives.Rmd` | R point estimates added and match published convention closely; Stata standard errors/stars still pending |
-| Appendix Table A1 | Session counts, subject counts, gender, age, and earnings by treatment | `data/processed/merged_treatment_control.dta`; `code/python/audit_raw_sessions.py`; source questionnaire/payment variables need review | Subject and earnings cells mostly verified; crash export excluded; TP10 has eight zTree run IDs but paper reports seven sessions |
+| Appendix Table A1 | Session counts, subject counts, gender, age, and earnings by treatment | `data/processed/merged_treatment_control.dta`; `code/python/audit_raw_sessions.py`; `code/python/rebuild_clean_data.py`; source questionnaire/payment variables need review | Subject and earnings cells mostly verified; crash export excluded; questionnaire demographics partially audited; TP10 has eight zTree run IDs but paper reports seven sessions |
 
 ## Verified Descriptive Checks
 
@@ -161,6 +164,22 @@ point-estimate check. At this stage it is still a supplement, not a replacement
 for the original Stata analysis, because exact Stata parity for bootstrap
 conventions, `mfx compute` standard errors, stars, and table formatting still
 needs to be checked carefully.
+
+## Raw-To-Clean Rebuild
+
+`code/python/rebuild_clean_data.py` rebuilds the subject-level zTree analysis
+CSV from raw zTree exports in the private archive extraction. The current rebuild
+passes all raw-to-clean checks:
+
+- 235 rebuilt rows versus 235 committed cleaned rows.
+- 98 rebuilt columns versus 98 committed cleaned columns.
+- Ordered column names match.
+- Cell values match within tolerance, with maximum numeric difference
+  `4.991552934e-07`.
+
+The same script derives the main analysis variables in
+`data/processed/merged_treatment_control.dta`. All audited derived variables pass
+against the committed Stata data within tolerance.
 
 ## Open Issues
 

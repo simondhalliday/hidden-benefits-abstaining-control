@@ -57,6 +57,43 @@ definitional rather than a missing-data issue: two zTree runs may have been
 counted as one session in the paper. This should be confirmed against lab
 records or coauthor memory before marking Appendix Table A1 fully verified.
 
+## Raw-to-clean rebuild
+
+Use `code/python/rebuild_clean_data.py` to rebuild the cleaned zTree analysis
+CSV from the raw zTree exports and derive the main variables that appear in the
+Stata analysis dataset:
+
+```bash
+python code/python/rebuild_clean_data.py --source /path/to/Autonomy_Control
+```
+
+The script writes rebuilt row-level files to `tmp/rebuilt_clean_data/`, which is
+git-ignored, and writes aggregate audit outputs to `docs/audit/`:
+
+- `raw_to_clean_rebuild_audit.csv`
+- `derived_variable_audit.csv`
+- `questionnaire_demographics_audit.csv`
+
+Current status:
+
+- The rebuilt zTree data match `data/processed/merged_control_treatment.csv` on
+  row count, column count, ordered column names, and all cell values within a
+  maximum numeric difference of `4.991552934e-07`. The tiny difference is due to
+  rounding of random-number fields in the committed CSV.
+- The derived variables used in `data/processed/merged_treatment_control.dta`
+  match the scripted derivation within floating-point tolerance, including
+  `finalearnings`, the GCOS indexes, treatment indicators, transfer differences,
+  response categories, and standardized scale variables.
+- The GCOS control-preference index in the committed Stata data is reproduced by
+  summing `Q1b`, `Q2c`, `Q3a`, `Q4b`, `Q5c`, `Q6c`, `Q7a`, `Q8a`, `Q9c`, `Q10c`,
+  `Q11a`, and `Q12b`.
+
+The separate questionnaire spreadsheets are audited only in aggregate. The
+script does not export raw free-text responses. Those files can help with
+Appendix Table A1 demographics, but they are less cleanly structured than the
+zTree exports and still need manual review before the demographic cells are
+marked fully verified.
+
 ## Open questions before Zenodo
 
 - Confirm with Gabriel Burdin and Fabio Landini that the consolidated data can be released under CC-BY 4.0.

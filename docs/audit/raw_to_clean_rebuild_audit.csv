@@ -1,0 +1,5 @@
+check,status,detail
+row_count,pass,rebuilt=235 cleaned=235
+column_count,pass,rebuilt=98 cleaned=98
+column_names,pass,ordered column names match
+cell_values_numeric_tolerance,pass,exact_string_diffs=0; max_numeric_diff=4.991552934e-07
